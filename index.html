@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Ice Cream Shop — Cute Assets Clean</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --app-h:100vh;
+      --brown:#8a4c2b;
+      --ink:#6c3457;
+      --good:#1f7a2e;
+      --bad:#b42318;
+      --shadow:0 8px 22px rgba(122,53,93,.12);
+      --panel:rgba(255,252,248,.94);
+    }
+    *{box-sizing:border-box;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+    html,body{margin:0;height:100%;}
+    html,body,body *{font-family:"Comic Neue","Comic Sans MS","Chalkboard SE","Marker Felt",cursive,sans-serif !important;}
+    body{
+      min-height:100vh;min-height:100svh;min-height:var(--app-h);
+      background:linear-gradient(rgba(255,250,247,.76),rgba(255,240,248,.84)), linear-gradient(180deg,#fff7ef,#ffdff0);
+      color:var(--ink);
+      overflow:hidden;
+    }
+    button,input{font:inherit;}
+
+    .cover{
+      min-height:var(--app-h);
+      display:flex;align-items:center;justify-content:center;
+      padding:max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+      background:linear-gradient(rgba(255,246,251,.82),rgba(255,240,247,.86)), linear-gradient(180deg,#ffc7e1 0%, #ffe8f4 50%, #fff9f1 100%);
+    }
+    .cover.hidden{display:none;}
+    .cover-card{
+      width:min(100%,540px);background:linear-gradient(180deg,#fffdfc,#fff1f8);
+      border:4px solid var(--brown);border-radius:24px;box-shadow:0 18px 40px rgba(0,0,0,.18);
+      padding:14px;text-align:center;
+    }
+    .cover-hero{
+      min-height:180px;border:4px solid var(--brown);border-radius:20px;margin-bottom:10px;
+      display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;
+      background:linear-gradient(180deg,#dcf5ff,#fff6be 60%,#ffd7a3);
+    }
+    .hero-big{font-size:60px;line-height:1;}
+    .cover-title{font-size:clamp(1.65rem,7vw,2rem);font-weight:900;color:#b03f75;margin:0;}
+    .cover-sub{margin:4px 0 10px;font-size:clamp(.95rem,3.8vw,1rem);font-weight:900;}
+    .cover-note{background:#fffaf0;border:3px solid var(--brown);border-radius:16px;padding:10px 12px;font-size:13px;font-weight:800;line-height:1.34;text-align:left;}
+    .text-input{width:100%;margin-top:12px;padding:12px 14px;font-size:18px;background:#fff;border:3px solid var(--brown);border-radius:14px;color:#5f361d;}
+    .cover-actions{display:flex;justify-content:center;margin-top:12px;}
+    .start-btn{min-width:220px;padding:10px 16px;border:3px solid var(--brown);border-radius:999px;cursor:pointer;background:linear-gradient(180deg,#fff2a8,#ffb9d8);font-size:30px;font-weight:900;color:#6a3151;}
+
+    .app{
+      height:var(--app-h);max-height:var(--app-h);width:min(100%,560px);margin:0 auto;
+      padding:max(6px, env(safe-area-inset-top)) 8px max(6px, env(safe-area-inset-bottom));
+      display:none;flex-direction:column;gap:5px;overflow:hidden;
+      background:linear-gradient(rgba(255,250,247,.62),rgba(255,240,248,.74)), linear-gradient(180deg,#fff7ef,#ffdff0);
+      background-size:cover;background-position:center bottom;background-repeat:no-repeat;
+    }
+    .app.show{display:flex;}
+    .topbar,.tickets-wrap,.progress-wrap,.frame,.feedback,.modal-card{background:var(--panel);border:3px solid var(--brown);border-radius:16px;box-shadow:var(--shadow);backdrop-filter:blur(2px);}
+    .topbar{padding:6px;}
+    .top-row{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+    .title{font-size:clamp(1.04rem,4vw,1.25rem);font-weight:900;color:#ad4476;line-height:1;}
+    .subtitle{font-size:10px;font-weight:900;opacity:.88;margin-top:2px;}
+    .top-actions{display:flex;gap:6px;flex-wrap:wrap;}
+    .pill-btn{border:2px solid var(--brown);border-radius:999px;background:#fff3df;color:#6a3151;font-size:15px;font-weight:900;padding:4px 8px;cursor:pointer;}
+    .status-grid{margin-top:5px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;}
+    .status-box{background:#fff3df;border:2px solid var(--brown);border-radius:10px;text-align:center;padding:4px 2px;font-size:8px;font-weight:900;line-height:1.05;}
+    .status-box span{display:block;font-size:11px;margin-top:1px;}
+    .tickets-wrap,.progress-wrap{padding:5px 8px;}
+    .section-label{text-align:center;font-size:10px;font-weight:900;margin-bottom:3px;}
+    .tickets{display:flex;justify-content:center;gap:4px;flex-wrap:wrap;min-height:24px;}
+    .ticket{width:22px;height:22px;border:2px solid var(--brown);border-radius:7px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;}
+    .ticket.correct{background:#dff7df;color:var(--good);}
+    .ticket.wrong{background:#ffe1db;color:var(--bad);}
+    .progress-bar{width:100%;height:9px;background:#fff3df;border:2px solid var(--brown);border-radius:999px;overflow:hidden;}
+    .progress-fill{width:0%;height:100%;background:linear-gradient(90deg,#ffd472,#ffa2cb,#8dd8ff);transition:width .25s ease;}
+    .story-nav{display:flex;gap:6px;}
+    .story-pill{flex:1 1 0;border:2px solid var(--brown);border-radius:999px;background:#fff7e8;color:#6a3151;font-size:16.5px;font-weight:900;padding:5px 4px;text-align:center;}
+    .story-pill.active{background:#dff7ff;}
+
+    .frame{display:none;flex:1 1 auto;min-height:0;padding:8px;overflow:hidden;}
+    .frame.active{display:flex;flex-direction:column;gap:8px;}
+    .frame-title{text-align:center;font-size:14px;font-weight:900;color:#a04271;}
+    .main-card{width:100%;background:#fff7fb;border:3px solid var(--brown);border-radius:14px;padding:10px 8px;text-align:center;}
+    .dialogue{font-size:11px;font-weight:800;line-height:1.24;color:#8a4f18;}
+    .help-line,.note{font-size:11px;font-weight:800;line-height:1.24;}
+    .note{width:100%;background:#fff3df;border:2px dashed var(--brown);border-radius:12px;padding:8px;text-align:center;}
+    .equation-big{font-size:clamp(2.325rem,9vw,3rem);font-weight:900;color:#c43e78;line-height:1.05;margin:6px 0 4px;}
+    .equation-mini{font-size:clamp(1.575rem,6.6vw,1.8rem);font-weight:900;color:#c43e78;line-height:1.05;margin:0;}
+
+    .character-frame,.seller-frame{width:100%;max-width:220px;height:130px;margin:0 auto;border:3px solid var(--brown);border-radius:18px;background:linear-gradient(180deg,#fffaf0,#ffe0f1);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+    .seller-frame{max-width:240px;height:140px;}
+    .character-img,.seller-img,.mini-seller-img{display:block;max-width:100%;max-height:100%;object-fit:contain;}
+    .img-fallback{display:none !important;width:100%;height:100%;align-items:center;justify-content:center;font-size:64px;line-height:1;}
+    .mini-seller-wrap{width:38px;height:38px;border-radius:50%;border:2px solid var(--brown);background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;flex:0 0 auto;}
+    .mini-seller-wrap.good{background:#e7f8ea;border-color:var(--good);}
+    .mini-seller-wrap.bad{background:#ffe6e0;border-color:var(--bad);}
+    .mini-seller-img{width:100%;height:100%;object-fit:cover;}
+    .mini-seller-fallback{font-size:22px;line-height:1;}
+    .equation-face-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;}
+
+    .freezer-stage{width:100%;flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#eaf9ff,#fffefa);border:3px solid #9fd3f4;border-radius:18px;padding:8px;overflow:hidden;}
+    .freezer-grid{width:100%;max-width:320px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;align-items:end;justify-items:center;}
+    .ice-slot{width:100%;aspect-ratio:.82/1;min-height:58px;border:2px dashed rgba(138,76,43,.24);border-radius:14px;display:flex;align-items:center;justify-content:center;position:relative;background:rgba(255,255,255,.55);overflow:hidden;}
+    .ice-slot.empty{background:rgba(255,255,255,.2);}
+    .ice-slot.left .ice-scoop{background:radial-gradient(circle at 35% 30%, #fff7ff, #7ee0d7 58%, #32b7aa 100%);border-color:#2c9e94;}
+    .ice-slot.sold .ice-treat{opacity:.18;filter:grayscale(1);transform:scale(.9);}
+    .ice-slot.sold::before{content:"✖";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;font-size:clamp(22px,6vw,32px);font-weight:900;color:rgba(180,35,24,.92);text-shadow:0 1px 0 #fff;opacity:0;transform:scale(.3) rotate(-18deg);}
+    .ice-slot.sold::after{content:"SOLD";position:absolute;top:4px;right:4px;font-size:9px;font-weight:900;color:#b42318;background:#fff;border:1px solid #e7b2ab;border-radius:999px;padding:1px 5px;z-index:3;opacity:0;}
+    .ice-treat{position:relative;width:70%;height:78%;display:flex;align-items:flex-start;justify-content:center;}
+    .ice-scoop{position:absolute;top:0;width:82%;aspect-ratio:1/1;border-radius:50%;background:radial-gradient(circle at 35% 30%, #fff7ff, #ff95cb 58%, #ef5a9a 100%);border:2px solid #b84c74;box-shadow:inset 0 -4px 0 rgba(255,255,255,.22);}
+    .ice-cone{position:absolute;bottom:0;width:52%;height:48%;clip-path:polygon(50% 100%, 0 0, 100% 0);background:linear-gradient(180deg,#f7d08a,#d89347);border:2px solid #a56a2c;}
+    .freezer-grid.reveal .ice-slot.reveal-left{animation:slotGlow .55s ease both;animation-delay:var(--d,0s);}
+    .freezer-grid.reveal .ice-slot.reveal-left .ice-treat{animation:scoopShow .6s cubic-bezier(.2,.8,.2,1.25) both;animation-delay:var(--d,0s);}
+    .freezer-grid.reveal.correct .ice-slot.reveal-left .ice-treat{animation:scoopCelebrate .68s cubic-bezier(.2,.8,.2,1.28) both;animation-delay:var(--d,0s);}
+    .freezer-grid.reveal .ice-slot.reveal-sold::before,.freezer-grid.reveal .ice-slot.reveal-sold::after{animation:crossStamp .35s ease both;animation-delay:var(--d,0s);}
+    .freezer-grid.reveal .ice-slot.reveal-sold .ice-treat{animation:soldFade .35s ease both;animation-delay:var(--d,0s);}
+    @keyframes scoopShow{0%{transform:translateY(14px) scale(.72);opacity:.18;}70%{transform:translateY(-4px) scale(1.03);opacity:1;}100%{transform:translateY(0) scale(1);opacity:1;}}
+    @keyframes scoopCelebrate{0%{transform:translateY(16px) scale(.65);opacity:.15;}55%{transform:translateY(-9px) scale(1.1);opacity:1;}100%{transform:translateY(0) scale(1);opacity:1;}}
+    @keyframes slotGlow{0%{box-shadow:0 0 0 rgba(126,224,215,0);}45%{box-shadow:0 0 0 5px rgba(126,224,215,.28);}100%{box-shadow:0 0 0 0 rgba(126,224,215,0);}}
+    @keyframes crossStamp{0%{opacity:0;transform:scale(.3) rotate(-18deg);}75%{opacity:1;transform:scale(1.15) rotate(-18deg);}100%{opacity:1;transform:scale(1) rotate(-18deg);}}
+    @keyframes soldFade{0%{opacity:1;filter:grayscale(0);transform:scale(1);}100%{opacity:.18;filter:grayscale(1);transform:scale(.9);}}
+
+    .reasoning-panel{display:none;width:100%;background:#eef9f0;border:3px dashed var(--good);border-radius:14px;padding:8px 10px;text-align:center;font-weight:900;}
+    .reasoning-panel.show{display:block;}
+    .reasoning-panel.bad{background:#fff1eb;border-color:var(--bad);color:#8f1e15;}
+    .reasoning-title{font-size:11px;margin-bottom:4px;}
+    .reasoning-line{font-size:27px;letter-spacing:.02em;}
+
+    .answer-panel{width:100%;background:rgba(255,250,243,.98);border:2px solid var(--brown);border-radius:16px;box-shadow:0 6px 14px rgba(123,75,42,.12);padding:6px;display:grid;grid-template-columns:84px 1fr;gap:8px;align-items:start;}
+    .answer-bubble{width:68px;height:68px;border-radius:50%;border:3px solid var(--brown);background:linear-gradient(180deg,#fff5bf,#ffd1e6);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#a04271;margin:0 auto;box-shadow:inset 0 -6px 0 rgba(255,255,255,.35);}
+    .answer-mini{font-size:10px;font-weight:900;text-align:center;line-height:1.15;margin-top:4px;}
+    .served-line{font-size:12px;font-weight:900;color:#a04271;text-align:center;min-height:16px;margin-top:3px;}
+    .answer-area{display:flex;flex-direction:column;gap:6px;min-width:0;}
+    .answer-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;}
+    .answer-btn{width:100%;min-width:0;padding:6px 0;border:2px solid var(--brown);border-radius:12px;background:#fff8eb;font-size:19.5px;font-weight:900;color:#6a3151;cursor:pointer;}
+    .answer-btn.active{background:#dff7ff;box-shadow:inset 0 0 0 3px #8ac8ff;}
+    .controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;}
+    .game-btn{min-width:72px;padding:7px 7px;border:3px solid var(--brown);border-radius:999px;background:#fff7e8;font-size:16.5px;font-weight:900;color:#5f361d;cursor:pointer;}
+    .game-btn:disabled{opacity:.55;cursor:not-allowed;}
+    .btn-check{background:#dff7df;}.btn-clear{background:#ffe6cc;}.btn-next{background:#ece4ff;}.btn-hint{background:#fff4c7;}
+
+    .speech{width:100%;background:#fff7fb;border:3px solid var(--brown);border-radius:16px;padding:10px 8px;text-align:center;font-size:11px;font-weight:900;line-height:1.25;min-height:88px;}
+    .speech.good{background:#e7f8ea;border-color:var(--good);color:#1f5f29;}
+    .speech.bad{background:#ffe6e0;border-color:var(--bad);color:#8f1e15;}
+    .story-actions{display:flex;gap:8px;}.story-actions .game-btn{flex:1 1 0;min-width:0;}
+    .feedback{min-height:40px;padding:8px 10px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;font-weight:900;line-height:1.2;}
+    .feedback.good{color:var(--good);}.feedback.bad{color:var(--bad);}
+    .footer{text-align:center;font-size:9px;font-weight:900;opacity:.8;padding-bottom:2px;}
+
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(70,40,20,.45);z-index:100;}
+    .modal.show{display:flex;}
+    .modal-card{width:min(100%,520px);max-height:88vh;overflow:auto;background:linear-gradient(180deg,#fffef9,#fff1dc);padding:16px 14px;text-align:center;}
+    .modal-title{font-size:24px;font-weight:900;color:#b85b18;margin-bottom:8px;}
+    .modal-badge{display:inline-block;padding:10px 16px;border-radius:999px;border:3px solid var(--brown);background:#fff9dd;font-size:18px;font-weight:900;margin:8px 0 12px;}
+    .modal-line{font-size:16px;font-weight:800;line-height:1.3;margin-bottom:10px;}
+    .report{width:100%;margin:0 auto 14px;background:#fff8eb;border:3px solid var(--brown);border-radius:18px;padding:12px 14px;text-align:left;font-size:15px;font-weight:800;line-height:1.4;}
+    .modal-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
+    .bonus-box{display:none;width:100%;margin:0 auto 14px;padding:12px;background:linear-gradient(180deg,#fff7b8,#ffd86b,#ffb84d);border:4px solid var(--brown);border-radius:20px;text-align:center;box-shadow:0 10px 0 rgba(123,75,42,.12);}
+    .bonus-box.show{display:block;}
+    .bonus-title{font-size:22px;font-weight:900;color:#8a3d00;margin-bottom:6px;}
+    .bonus-line{font-size:14px;font-weight:900;line-height:1.35;color:#5f361d;}
+    .bonus-image-frame{width:min(100%,220px);height:150px;margin:0 auto 10px;background:rgba(255,255,255,.72);border:4px solid var(--brown);border-radius:18px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+    .bonus-image{display:block;max-width:100%;max-height:100%;object-fit:contain;}
+    .bonus-fallback{font-size:64px;line-height:1;}
+    .bonus-box.challenge{background:linear-gradient(180deg,#fff7d7,#ffe6a3,#ffd28d);}
+    .confetti-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:140;}
+    .confetti-piece{position:fixed;top:-30px;border-radius:3px;opacity:.95;animation:confettiFall linear forwards;}
+    @keyframes confettiFall{0%{transform:translateY(-30px) rotate(0deg);}100%{transform:translateY(110vh) rotate(720deg);}}
+
+    @media (max-width:430px){
+      .app{padding:max(4px, env(safe-area-inset-top)) 6px max(4px, env(safe-area-inset-bottom));gap:4px;}
+      .topbar,.tickets-wrap,.progress-wrap,.frame,.feedback,.modal-card{border-width:2px;border-radius:14px;}
+      .title{font-size:.92rem;}.subtitle{font-size:8px;}
+      .pill-btn{font-size:12px;padding:4px 7px;}
+      .status-box{font-size:7px;padding:3px 1px;}.status-box span{font-size:9px;}
+      .section-label{font-size:9px;}.ticket{width:18px;height:18px;font-size:9px;}
+      .story-pill{font-size:13px;padding:5px 3px;}
+      .frame{padding:5px;}.frame-title{font-size:11px;}.main-card{padding:6px 5px;border-width:2px;}
+      .dialogue,.help-line,.note,.speech,.feedback,.reasoning-title{font-size:9px;}
+      .equation-big{font-size:2.025rem;}
+      .equation-mini{font-size:1.5rem;}
+      .reasoning-line{font-size:24px;}
+      .character-frame{max-width:180px;height:102px;border-width:2px;}.seller-frame{max-width:190px;height:112px;border-width:2px;}
+      .freezer-grid{gap:6px;max-width:280px;}.ice-slot{min-height:52px;border-width:2px;}
+      .answer-panel{grid-template-columns:72px 1fr;gap:5px;padding:4px;border-radius:12px;}
+      .answer-bubble{width:56px;height:56px;font-size:24px;border-width:2px;}
+      .answer-grid{gap:4px;}.answer-btn{font-size:15px;padding:6px 0;border-width:2px;border-radius:10px;}
+      .controls{gap:4px;}.game-btn{font-size:12px;padding:6px 4px;border-width:2px;}
+      .mini-seller-wrap{width:32px;height:32px;}.cover-card{padding:10px;}.cover-hero{min-height:144px;}.hero-big{font-size:50px;}
+      .cover-note{font-size:11px;padding:8px 10px;}.text-input{padding:10px 12px;font-size:16px;}
+      .start-btn{min-width:180px;padding:10px 14px;font-size:22px;}
+    }
+    @media (max-height:780px) and (pointer:coarse){
+      .app{gap:3px;padding:max(2px, env(safe-area-inset-top)) 5px max(2px, env(safe-area-inset-bottom));}
+      .title{font-size:.85rem;}.subtitle{font-size:7px;}
+      .pill-btn{font-size:10px;padding:4px 6px;}
+      .status-box{font-size:7px;padding:2px 1px;}.status-box span{font-size:8px;}
+      .ticket{width:16px;height:16px;font-size:8px;}
+      .story-pill{font-size:11px;padding:4px 2px;}
+      .frame{padding:4px;}.main-card{padding:5px 4px;}
+      .dialogue,.help-line,.note,.speech,.feedback,.reasoning-title{font-size:8px;line-height:1.12;}
+      .equation-big{font-size:1.8rem;}
+      .equation-mini{font-size:1.425rem;}
+      .reasoning-line{font-size:22px;}
+      .character-frame{max-width:155px;height:90px;}.seller-frame{max-width:170px;height:98px;}.freezer-grid{gap:5px;max-width:250px;}.ice-slot{min-height:46px;}
+      .answer-panel{grid-template-columns:62px 1fr;gap:4px;padding:3px;}.answer-bubble{width:50px;height:50px;font-size:20px;}
+      .answer-btn{font-size:13.5px;padding:5px 0;}.game-btn{font-size:10.5px;padding:5px 3px;}.mini-seller-wrap{width:28px;height:28px;}
+      .feedback{min-height:28px;padding:4px 5px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="cover" id="coverScreen">
+    <div class="cover-card">
+      <div class="cover-hero" aria-hidden="true">
+        <div class="hero-big">🍦 🍨 🍧</div>
+        <div style="font-weight:900;color:#8a4c2b;">Cute seller, cute customer, cute maths!</div>
+      </div>
+      <h1 class="cover-title">Ice Cream Shop</h1>
+      <div class="cover-sub">Cute Art + Audio Version</div>
+      <div class="cover-note">
+        <strong>Learning goals</strong><br>
+        Level 1 = subtraction from 10 practice<br>
+        Level 2 = subtraction from 10<br>
+        Level 3 = subtraction within 10<br>
+        Level 4 = 10 − ? = number<br>
+        Level 5 = mixed bonus challenge<br><br>
+        Get a <strong>streak of 7</strong> in Level 5 to win the <strong>Super Sundae</strong>.
+      </div>
+      <input id="coverNameInput" class="text-input" type="text" maxlength="20" placeholder="Type player name">
+      <div class="cover-actions">
+        <button class="start-btn" id="coverStartBtn" type="button">▶ START GAME</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app" id="app">
+    <header class="topbar">
+      <div class="top-row">
+        <div>
+          <div class="title">Ice Cream Shop</div>
+          <div class="subtitle">Order → Count → Seller</div>
+        </div>
+        <div class="top-actions">
+          <button class="pill-btn" id="soundToggleBtn" type="button">🔊 Sound</button>
+          <button class="pill-btn" id="changeUserBtn" type="button">👤 Change</button>
+          <button class="pill-btn" id="infoBtn" type="button">📘 Info</button>
+        </div>
+      </div>
+      <div class="status-grid">
+        <div class="status-box">Player<span id="playerNameText">Seller</span></div>
+        <div class="status-box">Level<span id="levelText">1</span></div>
+        <div class="status-box">Question<span><span id="qNumText">1</span>/<span id="qTotalText">3</span></span></div>
+        <div class="status-box">Round Score<span id="roundScoreText">0</span></div>
+        <div class="status-box">Assessed<span id="assessedScoreText">0/15</span></div>
+        <div class="status-box">Time<span id="timerText">Off</span></div>
+      </div>
+    </header>
+
+    
+
+    <div class="progress-wrap">
+      <div class="section-label">Level Progress</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <div class="story-nav">
+      <div class="story-pill active" id="pill1">1. Order</div>
+      <div class="story-pill" id="pill2">2. Count</div>
+      <div class="story-pill" id="pill3">3. Seller</div>
+    </div>
+
+    <section class="frame active" id="frame1">
+      <div class="frame-title">Customer Order</div>
+      <div class="character-frame">
+        <img id="customerImg" class="character-img" alt="Cute customer">
+      </div>
+      <div class="main-card">
+        <div class="dialogue" id="customerLine">A new order is ready.</div>
+        <div class="equation-big" id="orderEquation">10 − 2 = ?</div>
+        <div class="help-line" id="orderHelp">Read the order, then go to the count screen.</div>
+      </div>
+    </section>
+
+    <section class="frame" id="frame2">
+      <div class="frame-title">Count and Serve</div>
+      <div class="main-card">
+        <div class="dialogue">Order reminder</div>
+        <div class="equation-face-row">
+          <div class="equation-mini" id="countEquation">10 − 2 = ?</div>
+          <div class="mini-seller-wrap" id="miniSellerWrap">
+            <img id="miniSellerImg" class="mini-seller-img" alt="Seller reaction" hidden>
+            <div id="miniSellerFallback" class="mini-seller-fallback">🍦</div>
+          </div>
+        </div>
+        <div class="help-line" id="countHelp">Tap an answer, then press Check.</div>
+      </div>
+      <div class="freezer-stage">
+        <div class="freezer-grid" id="freezerGrid" aria-label="Ice cream freezer"></div>
+      </div>
+      <div class="reasoning-panel" id="reasoningPanel">
+        <div class="reasoning-title" id="reasoningTitle">Yes! This shows what is left.</div>
+        <div class="reasoning-line" id="reasoningLine">10 − 4 = 6</div>
+      </div>
+      <div class="answer-panel">
+        <div>
+          <div class="answer-bubble" id="chosenBubble">?</div>
+          <div class="answer-mini">Chosen answer: <span id="chosenText">—</span></div>
+          <div class="served-line" id="servedLine"></div>
+        </div>
+        <div class="answer-area">
+          <div class="answer-grid" id="answerGrid"></div>
+          <div class="controls">
+            <button class="game-btn btn-check" id="checkBtn" type="button">✔ Check</button>
+            <button class="game-btn btn-hint" id="hintBtn" type="button">💡 Hint</button>
+            <button class="game-btn btn-clear" id="clearBtn" type="button">✖ Clear</button>
+            <button class="game-btn btn-next" id="nextBtn" type="button">➡ Next</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="frame" id="frame3">
+      <div class="frame-title">Seller</div>
+      <div class="seller-frame">
+        <img id="sellerImg" class="seller-img" alt="Cute seller" hidden>
+        <div id="sellerFallback" class="img-fallback">🍨</div>
+      </div>
+      <div class="speech" id="sellerSpeech">New order ready. Solve it first.</div>
+      <div class="note" id="missionLine">Practice at Level 1.</div>
+      <div class="note">Best assessed score on this device: <span id="bestScoreText">0</span> | Best streak: <span id="bestStreakText">0</span></div>
+    </section>
+
+    <div class="story-actions">
+      <button class="game-btn btn-clear" id="backBtn" type="button">⬅ Back</button>
+      <button class="game-btn btn-next" id="forwardBtn" type="button">Next ➡</button>
+    </div>
+
+    <div class="feedback" id="feedback">Welcome to Ice Cream Shop!</div>
+    <div class="footer">Designed by Lim Kim Sze © 2026</div>
+  </div>
+
+  <div class="modal" id="infoModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-title">Game Info</div>
+      <div class="report">
+        Level 1 = practice only<br>
+        Level 2 = subtraction from 10<br>
+        Level 3 = subtraction within 10 + timer<br>
+        Level 4 = missing number from 10 + timer<br>
+        Level 5 = mixed bonus challenge<br><br>
+        Get a <strong>streak of 7</strong> in Level 5 to win the <strong>Super Sundae</strong>.<br><br>
+        Cute image files and sound files are already wired into this HTML.
+      </div>
+      <div class="modal-actions">
+        <button class="game-btn btn-check" id="closeInfoBtn" type="button">✔ Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="introModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-title" id="introTitle">Level 1 — Practice Scoops</div>
+      <div class="modal-badge" id="introBadge">Ice Cream Helper</div>
+      <div class="modal-line" id="introMission">Practice only. This level does not count for assessed score.</div>
+      <div class="report" id="introDetails"></div>
+      <div class="modal-actions">
+        <button class="game-btn btn-check" id="startLevelBtn" type="button">🍦 Start Level</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="roundModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-title" id="roundTitle">Level Complete!</div>
+      <div class="modal-badge" id="roundBadge">Ice Cream Star</div>
+      <div class="report" id="roundReport"></div>
+      <div class="modal-line" id="roundLine">Great work!</div>
+      <div class="bonus-box" id="bonusBox">
+        <div class="bonus-title" id="bonusTitle">🍨 Super Sundae Challenge</div>
+        <div class="bonus-image-frame">
+          <img id="secretSundaeImg" class="bonus-image" alt="Secret sundae reward" hidden>
+          <div id="secretSundaeFallback" class="bonus-fallback">🍨✨</div>
+        </div>
+        <div class="bonus-line" id="bonusLine">Reach a streak of 7 in Level 5 to unlock the Super Sundae.</div>
+      </div>
+      <div class="modal-actions" id="roundActions"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="nameModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-title">Change Player</div>
+      <div class="modal-line">Type the player name for this device.</div>
+      <input id="playerNameInput" class="text-input" type="text" maxlength="20" placeholder="Type player name">
+      <div class="modal-actions" style="margin-top:12px;">
+        <button class="game-btn btn-check" id="saveNameBtn" type="button">✔ Save</button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="audioOpening" preload="auto" loop></audio>
+  <audio id="audioCorrect" preload="auto"></audio>
+  <audio id="audioWrong" preload="auto"></audio>
+  <audio id="audioLevel" preload="auto"></audio>
+  <div class="confetti-layer" id="confettiLayer"></div>
+
+  <script>
+    function setAppHeight(){ document.documentElement.style.setProperty('--app-h', window.innerHeight + 'px'); }
+    setAppHeight();
+    window.addEventListener('resize', setAppHeight);
+    window.addEventListener('orientationchange', setAppHeight);
+
+    const ASSETS = {
+      images:{
+        cartBackdrop:['assets/ice_cream_cart_backdrop.png','ice_cream_cart_backdrop.png'],
+        customers:[
+          ['assets/customer_01_happy_girl.png','customer_01_happy_girl.png'],
+          ['assets/customer_02_happy_boy.png','customer_02_happy_boy.png'],
+          ['assets/customer_03_glasses.png','customer_03_glasses.png'],
+          ['assets/customer_04_cap.png','customer_04_cap.png'],
+          ['assets/customer_05_vip_princess.png','customer_05_vip_princess.png']
+        ],
+        sellerNeutral:['assets/seller_neutral_cute.png','seller_neutral_cute.png'],
+        sellerHappy:['assets/seller_happy_cute.png','seller_happy_cute.png'],
+        sellerSad:['assets/seller_sad_cute.png','seller_sad_cute.png'],
+        secretSundae:['assets/secret_sundae_easter_egg.png','secret_sundae_easter_egg.png']
+      },
+      audio:{
+        opening:['assets/opening_music.mp3','opening_music.mp3'],
+        correct:['assets/correct_chime.mp3','correct_chime.mp3'],
+        wrong:['assets/wrong_bloop.mp3','wrong_bloop.mp3'],
+        level:['assets/level_tada.mp3','level_tada.mp3']
+      }
+    };
+
+    const safeStore = {
+      get(key, fallback){ try{ const value = localStorage.getItem(key); return value === null ? fallback : value; }catch(err){ return fallback; } },
+      set(key, value){ try{ localStorage.setItem(key, String(value)); }catch(err){} }
+    };
+
+    const STORE_NAME = 'ice_cream_player_name';
+    const STORE_BEST = 'ice_cream_best_score';
+    const STORE_STREAK = 'ice_cream_best_streak';
+
+    const levels = {
+      1:{name:'Level 1 — Practice Scoops', badge:'Ice Cream Helper', q:3, timer:0, counted:false, mode:'from10easy', mission:'Practice subtraction from 10. This level does not count for assessed score.'},
+      2:{name:'Level 2 — Scoop Seller', badge:'Scoop Seller', q:4, timer:0, counted:true, mode:'from10', mission:'Subtraction from 10. This level counts in the assessed score.'},
+      3:{name:'Level 3 — Busy Cart', badge:'Busy Cart Seller', q:5, timer:20, counted:true, mode:'within10', mission:'Subtraction within 10 with a timer. This level counts in the assessed score.'},
+      4:{name:'Level 4 — Mystery Orders', badge:'Mystery Seller', q:6, timer:20, counted:true, mode:'missing10', mission:'Find the missing number in equations like 10 − ? = 3. This level counts in the assessed score.'},
+      5:{name:'Level 5 — Ice Cream Rush', badge:'Ice Cream Legend', q:8, timer:15, counted:false, mode:'mixed', mission:'Bonus only. Get a streak of 7 to win the Super Sundae!'}
+    };
+
+    const customerPool = [
+      'Yay! I want ice cream!',
+      'Please help with my order!',
+      'This looks fun!',
+      'I want my ice cream fast!',
+      'Please solve this before it melts!',
+      'No guessing, please.'
+    ];
+
+    const coverScreen = document.getElementById('coverScreen');
+    const coverNameInput = document.getElementById('coverNameInput');
+    const coverStartBtn = document.getElementById('coverStartBtn');
+    const app = document.getElementById('app');
+    const playerNameText = document.getElementById('playerNameText');
+    const levelText = document.getElementById('levelText');
+    const qNumText = document.getElementById('qNumText');
+    const qTotalText = document.getElementById('qTotalText');
+    const roundScoreText = document.getElementById('roundScoreText');
+    const assessedScoreText = document.getElementById('assessedScoreText');
+    const timerText = document.getElementById('timerText');
+    const ticketsRow = document.getElementById('ticketsRow');
+    const progressFill = document.getElementById('progressFill');
+    const frame1 = document.getElementById('frame1');
+    const frame2 = document.getElementById('frame2');
+    const frame3 = document.getElementById('frame3');
+    const pill1 = document.getElementById('pill1');
+    const pill2 = document.getElementById('pill2');
+    const pill3 = document.getElementById('pill3');
+    const customerImg = document.getElementById('customerImg');
+    const orderEquation = document.getElementById('orderEquation');
+    const orderHelp = document.getElementById('orderHelp');
+    const customerLine = document.getElementById('customerLine');
+    const countEquation = document.getElementById('countEquation');
+    const countHelp = document.getElementById('countHelp');
+    const miniSellerWrap = document.getElementById('miniSellerWrap');
+    const miniSellerImg = document.getElementById('miniSellerImg');
+    const miniSellerFallback = document.getElementById('miniSellerFallback');
+    const freezerGrid = document.getElementById('freezerGrid');
+    const reasoningPanel = document.getElementById('reasoningPanel');
+    const reasoningTitle = document.getElementById('reasoningTitle');
+    const reasoningLine = document.getElementById('reasoningLine');
+    const chosenBubble = document.getElementById('chosenBubble');
+    const chosenText = document.getElementById('chosenText');
+    const servedLine = document.getElementById('servedLine');
+    const answerGrid = document.getElementById('answerGrid');
+    const checkBtn = document.getElementById('checkBtn');
+    const hintBtn = document.getElementById('hintBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const sellerImg = document.getElementById('sellerImg');
+    const sellerFallback = document.getElementById('sellerFallback');
+    const sellerSpeech = document.getElementById('sellerSpeech');
+    const missionLine = document.getElementById('missionLine');
+    const bestScoreText = document.getElementById('bestScoreText');
+    const bestStreakText = document.getElementById('bestStreakText');
+    const feedback = document.getElementById('feedback');
+    const backBtn = document.getElementById('backBtn');
+    const forwardBtn = document.getElementById('forwardBtn');
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const changeUserBtn = document.getElementById('changeUserBtn');
+    const infoBtn = document.getElementById('infoBtn');
+    const infoModal = document.getElementById('infoModal');
+    const closeInfoBtn = document.getElementById('closeInfoBtn');
+    const introModal = document.getElementById('introModal');
+    const introTitle = document.getElementById('introTitle');
+    const introBadge = document.getElementById('introBadge');
+    const introMission = document.getElementById('introMission');
+    const introDetails = document.getElementById('introDetails');
+    const startLevelBtn = document.getElementById('startLevelBtn');
+    const roundModal = document.getElementById('roundModal');
+    const roundTitle = document.getElementById('roundTitle');
+    const roundBadge = document.getElementById('roundBadge');
+    const roundReport = document.getElementById('roundReport');
+    const roundLine = document.getElementById('roundLine');
+    const roundActions = document.getElementById('roundActions');
+    const bonusBox = document.getElementById('bonusBox');
+    const bonusTitle = document.getElementById('bonusTitle');
+    const bonusLine = document.getElementById('bonusLine');
+    const secretSundaeImg = document.getElementById('secretSundaeImg');
+    const secretSundaeFallback = document.getElementById('secretSundaeFallback');
+    const nameModal = document.getElementById('nameModal');
+    const playerNameInput = document.getElementById('playerNameInput');
+    const saveNameBtn = document.getElementById('saveNameBtn');
+    const audioOpening = document.getElementById('audioOpening');
+    const audioCorrect = document.getElementById('audioCorrect');
+    const audioWrong = document.getElementById('audioWrong');
+    const audioLevel = document.getElementById('audioLevel');
+    const confettiLayer = document.getElementById('confettiLayer');
+
+    let soundOn = true;
+    let audioCtx = null;
+    let currentLevel = 1;
+    let currentQuestionNumber = 1;
+    let currentRoundScore = 0;
+    let assessedScore = 0;
+    let perLevelScore = {2:0,3:0,4:0};
+    let streak = 0;
+    let bestRunStreak = 0;
+    let currentLevelStreak = 0;
+    let level5BestStreak = 0;
+    let currentStep = 1;
+    let selectedAnswer = null;
+    let questionResolved = false;
+    let revealReady = false;
+    let revealCorrect = false;
+    let currentQuestion = null;
+    let timerId = null;
+    let timeLeft = null;
+    let usedKeys = new Set();
+    let gameStartedOnce = false;
+
+    function randomFrom(list){ return list[Math.floor(Math.random() * list.length)]; }
+    function funnyCorrectLine(){ return randomFrom(['Scooptastic! You counted like a maths magician!','Waffle wow! That answer was colder than the freezer!','Sprinkle power! You scooped the right answer!','Cherry on top! Your counting was spot on!','Minty miracle! You served that order perfectly!']); }
+    function funnyWrongLine(){ return randomFrom(['Oopsie scoopie! That cone rolled the wrong way!','Banana bop! The ice cream shop needs another try!','Uh-oh, brain freeze! Let us count those scoops again!','Drip drop! That answer melted a little!','Whoops sprinkles! The freezer says try again!']); }
+
+    function ensureAudioContext(){
+      if(!audioCtx){ const AC = window.AudioContext || window.webkitAudioContext; if(AC) audioCtx = new AC(); }
+      if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
+    }
+    function tone(freq, duration=0.08, type='sine', volume=0.03){
+      if(!soundOn) return;
+      try{
+        ensureAudioContext();
+        if(!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type; osc.frequency.value = freq; gain.gain.value = volume;
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+        gain.gain.setValueAtTime(volume, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+        osc.start(now); osc.stop(now + duration);
+      }catch(err){}
+    }
+    function fallbackCorrect(){ tone(740,0.09,'triangle',0.035); setTimeout(()=>tone(988,0.12,'triangle',0.03),90); }
+    function fallbackWrong(){ tone(220,0.11,'sawtooth',0.03); setTimeout(()=>tone(185,0.14,'sawtooth',0.024),80); }
+    function fallbackLevel(){ tone(659,0.08,'triangle',0.03); setTimeout(()=>tone(880,0.08,'triangle',0.03),90); setTimeout(()=>tone(1047,0.12,'triangle',0.03),180); }
+    function fallbackTap(){ tone(420,0.04,'sine',0.02); }
+    window.addEventListener('pointerdown', ensureAudioContext, {once:true});
+
+    function setAudioSource(audioEl, candidates){
+      audioEl.dataset.candidates = JSON.stringify(candidates);
+      audioEl.dataset.index = '0';
+      audioEl.src = candidates[0];
+      audioEl.load();
+      audioEl.onerror = ()=>{
+        const list = JSON.parse(audioEl.dataset.candidates || '[]');
+        const nextIndex = Number(audioEl.dataset.index || '0') + 1;
+        if(nextIndex < list.length){ audioEl.dataset.index = String(nextIndex); audioEl.src = list[nextIndex]; audioEl.load(); }
+        else { audioEl.dataset.failed = '1'; }
+      };
+    }
+    function playAssetSound(audioEl, fallbackFn){
+      if(!soundOn) return;
+      if(audioEl.dataset.failed === '1'){ fallbackFn(); return; }
+      try{ audioEl.currentTime = 0; const p = audioEl.play(); if(p && typeof p.catch === 'function'){ p.catch(()=>fallbackFn()); } }
+      catch(err){ fallbackFn(); }
+    }
+    function startOpeningMusic(){
+      if(!soundOn || audioOpening.dataset.failed === '1') return;
+      try{ audioOpening.loop = true; audioOpening.currentTime = 0; const p = audioOpening.play(); if(p && typeof p.catch === 'function'){ p.catch(()=>{}); } }catch(err){}
+    }
+    function stopOpeningMusic(){ try{ audioOpening.pause(); audioOpening.currentTime = 0; }catch(err){} }
+
+    function tryImage(imgEl, fallbackEl, candidates, fallbackText){
+      let index = 0;
+      if(fallbackEl && fallbackText !== undefined) fallbackEl.textContent = fallbackText;
+      function load(){
+        if(index >= candidates.length){
+          if(imgEl) imgEl.style.visibility = 'hidden';
+          if(fallbackEl) fallbackEl.hidden = false;
+          return;
+        }
+        imgEl.onload = ()=>{ imgEl.hidden = false; imgEl.style.visibility = 'visible'; if(fallbackEl) fallbackEl.hidden = true; };
+        imgEl.onerror = ()=>{ index += 1; load(); };
+        imgEl.src = candidates[index];
+      }
+      load();
+    }
+    function setSmartBackground(candidates){
+      let index = 0; const test = new Image();
+      test.onload = ()=>{ app.style.backgroundImage = `linear-gradient(rgba(255,250,247,.62),rgba(255,240,248,.74)), url('${candidates[index]}')`; };
+      test.onerror = ()=>{ index += 1; if(index < candidates.length) test.src = candidates[index]; };
+      test.src = candidates[0];
+    }
+
+    function setMiniSellerState(state){
+      miniSellerWrap.className = 'mini-seller-wrap' + (state ? ` ${state}` : '');
+      if(state === 'good') tryImage(miniSellerImg, miniSellerFallback, ASSETS.images.sellerHappy, '😄');
+      else if(state === 'bad') tryImage(miniSellerImg, miniSellerFallback, ASSETS.images.sellerSad, '😢');
+      else tryImage(miniSellerImg, miniSellerFallback, ASSETS.images.sellerNeutral, '🍦');
+    }
+    function setSellerArt(state){
+      if(state === 'good') tryImage(sellerImg, sellerFallback, ASSETS.images.sellerHappy, '😄');
+      else if(state === 'bad') tryImage(sellerImg, sellerFallback, ASSETS.images.sellerSad, '😢');
+      else tryImage(sellerImg, sellerFallback, ASSETS.images.sellerNeutral, '🍦');
+      setMiniSellerState(state);
+    }
+
+    function getPlayerName(){ const raw = String(safeStore.get(STORE_NAME, 'Seller') || '').trim().replace(/\s+/g,' '); return (raw || 'Seller').slice(0,20); }
+    function setPlayerName(name){ const finalName = String(name || '').trim().replace(/\s+/g,' ').slice(0,20) || 'Seller'; safeStore.set(STORE_NAME, finalName); playerNameText.textContent = finalName; coverNameInput.value = finalName; playerNameInput.value = finalName; }
+    function getBestScore(){ return Number(safeStore.get(STORE_BEST, 0) || 0); }
+    function setBestScore(score){ if(score > getBestScore()) safeStore.set(STORE_BEST, score); bestScoreText.textContent = String(getBestScore()); }
+    function getBestStreak(){ return Number(safeStore.get(STORE_STREAK, 0) || 0); }
+    function setBestStreak(score){ if(score > getBestStreak()) safeStore.set(STORE_STREAK, score); bestStreakText.textContent = String(getBestStreak()); }
+    function showModal(el){ el.classList.add('show'); el.setAttribute('aria-hidden','false'); }
+    function hideModal(el){ el.classList.remove('show'); el.setAttribute('aria-hidden','true'); }
+
+    function buildQuestion(start, sold){ const left = start - sold; return {key:`q-${start}-${sold}`,type:'standard',start,sold,left,answer:left,equation:`${start} − ${sold} = ?`,prompt:`${start} ice creams were ready. ${sold} were sold. How many are left?`,reasoning:`${start} − ${sold} = ${left}`}; }
+    function buildMissing10(left){ const sold = 10 - left; return {key:`m-${left}`,type:'missing10',start:10,sold,left,answer:sold,equation:`10 − ? = ${left}`,prompt:`10 ice creams were ready. ${left} are left. How many were sold?`,reasoning:`10 − ${sold} = ${left}`}; }
+    function questionBank(levelNo){
+      const mode = levels[levelNo].mode; const bank = [];
+      if(mode === 'from10easy'){ for(let sold=1; sold<=5; sold++) bank.push(buildQuestion(10, sold)); }
+      else if(mode === 'from10'){ for(let sold=0; sold<=10; sold++) bank.push(buildQuestion(10, sold)); }
+      else if(mode === 'within10'){ for(let start=4; start<=10; start++){ for(let sold=0; sold<=start; sold++) bank.push(buildQuestion(start, sold)); } }
+      else if(mode === 'missing10'){ for(let left=0; left<=10; left++) bank.push(buildMissing10(left)); }
+      else {
+        for(let sold=0; sold<=10; sold++) bank.push(buildQuestion(10, sold));
+        for(let start=4; start<=10; start++){ for(let sold=0; sold<=start; sold++) bank.push(buildQuestion(start, sold)); }
+        for(let left=0; left<=10; left++) bank.push(buildMissing10(left));
+      }
+      return bank;
+    }
+    function pickQuestion(){
+      const bank = questionBank(currentLevel); let available = bank.filter(q => !usedKeys.has(q.key));
+      if(!available.length){ usedKeys.clear(); available = bank.slice(); }
+      const q = randomFrom(available); usedKeys.add(q.key); return q;
+    }
+
+    function updateTop(){
+      const levelCfg = levels[currentLevel];
+      levelText.textContent = String(currentLevel);
+      qNumText.textContent = String(Math.min(currentQuestionNumber, levelCfg.q));
+      qTotalText.textContent = String(levelCfg.q);
+      roundScoreText.textContent = String(currentRoundScore);
+      assessedScoreText.textContent = assessedScore + '/15';
+      timerText.textContent = levelCfg.timer ? String(timeLeft === null ? levelCfg.timer : timeLeft) + 's' : 'Off';
+      missionLine.textContent = levelCfg.mission;
+      const done = Math.max(0, currentQuestionNumber - 1 + (questionResolved ? 1 : 0));
+      progressFill.style.width = (done / levelCfg.q * 100) + '%';
+      nextBtn.textContent = currentQuestionNumber >= levels[currentLevel].q ? '🏁 Finish Level' : '➡ Next';
+    }
+    function renderTickets(){
+  if(!ticketsRow) return;
+  ticketsRow.innerHTML = '';
+  for(let i=1; i<=levels[currentLevel].q; i++){
+    const div = document.createElement('div');
+    div.className = 'ticket';
+    div.id = 'ticket-' + i;
+    div.textContent = i;
+    ticketsRow.appendChild(div);
+  }
+}
+    function markTicket(type){ const t=document.getElementById('ticket-'+currentQuestionNumber); if(!t) return; t.className='ticket '+type; t.textContent = type==='correct' ? '✓' : '✕'; }
+
+    function setStep(step){
+      currentStep = Math.max(1, Math.min(3, step));
+      frame1.classList.toggle('active', currentStep === 1);
+      frame2.classList.toggle('active', currentStep === 2);
+      frame3.classList.toggle('active', currentStep === 3);
+      pill1.classList.toggle('active', currentStep === 1);
+      pill2.classList.toggle('active', currentStep === 2);
+      pill3.classList.toggle('active', currentStep === 3);
+      backBtn.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+      if(currentStep === 1) forwardBtn.textContent = 'Go to Count ➡';
+      else if(currentStep === 2) forwardBtn.textContent = questionResolved ? 'See Seller ➡' : 'Check First';
+      else forwardBtn.textContent = questionResolved ? (currentQuestionNumber >= levels[currentLevel].q ? 'Finish Level ➡' : 'Next Order ➡') : 'Back to Order ➡';
+    }
+
+    function updateChosenAnswer(){ chosenBubble.textContent = selectedAnswer === null ? '?' : String(selectedAnswer); chosenText.textContent = selectedAnswer === null ? '—' : String(selectedAnswer); servedLine.textContent = selectedAnswer === null ? '' : ('Answer = ' + selectedAnswer); }
+    function renderAnswers(){
+      answerGrid.innerHTML = '';
+      for(let n=0; n<=10; n++){
+        const btn = document.createElement('button'); btn.type='button'; btn.className='answer-btn' + (selectedAnswer === n ? ' active' : ''); btn.textContent=String(n);
+        btn.addEventListener('click', ()=>{ if(questionResolved) return; selectedAnswer=n; renderAnswers(); updateChosenAnswer(); syncButtons(); feedback.className='feedback'; feedback.textContent='Answer chosen. Press Check when ready.'; fallbackTap(); });
+        answerGrid.appendChild(btn);
+      }
+    }
+
+    function renderFreezer(){
+      freezerGrid.innerHTML=''; freezerGrid.className='freezer-grid';
+      if(revealReady) freezerGrid.classList.add('reveal');
+      if(revealCorrect) freezerGrid.classList.add('correct');
+      if(!currentQuestion) return;
+      for(let i=0; i<10; i++){
+        const slot=document.createElement('div'); slot.className='ice-slot'; slot.style.setProperty('--d', (i*0.05)+'s');
+        if(i >= currentQuestion.start){ slot.classList.add('empty'); freezerGrid.appendChild(slot); continue; }
+        if(revealReady){ if(i < currentQuestion.sold) slot.classList.add('sold','reveal-sold'); else slot.classList.add('left','reveal-left'); }
+        slot.innerHTML='<div class="ice-treat"><div class="ice-scoop"></div><div class="ice-cone"></div></div>';
+        freezerGrid.appendChild(slot);
+      }
+    }
+    function syncButtons(){ checkBtn.disabled = !currentQuestion || questionResolved || selectedAnswer === null; clearBtn.disabled = !currentQuestion || questionResolved || selectedAnswer === null; hintBtn.disabled = !currentQuestion || questionResolved; nextBtn.disabled = !questionResolved; nextBtn.style.display = questionResolved ? '' : 'none'; }
+    function setSellerReady(){ setSellerArt('neutral'); sellerSpeech.className='speech'; sellerSpeech.innerHTML='New order ready. Read the order, choose the answer, then press <strong>Check</strong>.'; hideReasoning(); }
+    function setSellerResult(correct, timedOut=false){
+      if(correct){
+        setSellerArt('good'); sellerSpeech.className='speech good';
+        sellerSpeech.innerHTML = currentQuestion.type === 'missing10'
+          ? `<strong>${funnyCorrectLine()}</strong><br>You found that <strong>${currentQuestion.answer}</strong> ice creams were sold.<br>${currentQuestion.reasoning}`
+          : `<strong>${funnyCorrectLine()}</strong><br>You found that <strong>${currentQuestion.left}</strong> ice creams are left.<br>${currentQuestion.reasoning}`;
+      } else {
+        setSellerArt('bad'); sellerSpeech.className='speech bad';
+        sellerSpeech.innerHTML = `<strong>${funnyWrongLine()}</strong><br>The correct answer is <strong>${currentQuestion.answer}</strong>.<br>${currentQuestion.reasoning}`;
+        if(timedOut) sellerSpeech.innerHTML += '<br>Time ran out on this order.';
+      }
+    }
+    function showReasoning(correct){
+      reasoningPanel.className = 'reasoning-panel show' + (correct ? '' : ' bad');
+      reasoningTitle.textContent = correct
+        ? (currentQuestion.type === 'missing10' ? 'Yes! This shows what was sold.' : 'Yes! This shows what is left.')
+        : (currentQuestion.type === 'missing10' ? 'Let’s fix it: this shows what was sold.' : 'Let’s fix it: this shows what is left.');
+      reasoningLine.textContent = currentQuestion.reasoning;
+    }
+    function hideReasoning(){ reasoningPanel.className = 'reasoning-panel'; reasoningTitle.textContent=''; reasoningLine.textContent=''; }
+
+    function startTimer(){
+      stopTimer(); const t = levels[currentLevel].timer;
+      if(!t){ timeLeft=null; updateTop(); return; }
+      timeLeft=t; updateTop();
+      timerId=setInterval(()=>{ timeLeft -= 1; updateTop(); if(timeLeft <= 0){ stopTimer(); timeUp(); } }, 1000);
+    }
+    function stopTimer(){ if(timerId){ clearInterval(timerId); timerId=null; } }
+
+    function timeUp(){
+      if(questionResolved || !currentQuestion) return;
+      questionResolved=true; revealReady=true; revealCorrect=false; streak=0; currentLevelStreak=0; markTicket('wrong');
+      setSellerResult(false, true); showReasoning(false); renderFreezer(); feedback.className='feedback bad'; feedback.textContent='⏱ Time is up! Correct answer: ' + currentQuestion.answer;
+      playAssetSound(audioWrong, fallbackWrong); syncButtons(); updateTop(); setStep(2);
+    }
+
+    function checkAnswer(){
+      if(!currentQuestion || questionResolved) return;
+      if(selectedAnswer === null){ feedback.className='feedback bad'; feedback.textContent='Choose a number first.'; return; }
+      stopTimer(); questionResolved=true;
+      const correct = selectedAnswer === currentQuestion.answer;
+      revealReady=true; revealCorrect=correct; renderFreezer(); showReasoning(correct);
+      if(correct){
+        currentRoundScore += 1;
+        if(levels[currentLevel].counted){ perLevelScore[currentLevel] += 1; assessedScore = perLevelScore[2] + perLevelScore[3] + perLevelScore[4]; }
+        streak += 1; currentLevelStreak += 1; if(currentLevel === 5) level5BestStreak = Math.max(level5BestStreak, currentLevelStreak);
+        bestRunStreak = Math.max(bestRunStreak, streak); setBestStreak(bestRunStreak); markTicket('correct');
+        setSellerResult(true, false); feedback.className='feedback good'; feedback.textContent='✅ ' + funnyCorrectLine(); playAssetSound(audioCorrect, fallbackCorrect); launchConfetti();
+      } else {
+        streak = 0; currentLevelStreak = 0; markTicket('wrong'); setSellerResult(false, false); feedback.className='feedback bad'; feedback.textContent='❌ ' + funnyWrongLine() + ' Correct answer: ' + currentQuestion.answer + '.'; playAssetSound(audioWrong, fallbackWrong);
+      }
+      setBestScore(assessedScore); syncButtons(); updateTop(); setStep(2);
+    }
+
+    function showHint(){
+      if(!currentQuestion || questionResolved) return;
+      revealReady=true; revealCorrect=false; renderFreezer(); showReasoning(false);
+      reasoningTitle.textContent = currentQuestion.type === 'missing10' ? 'Hint: think about what was sold.' : 'Hint: think about what is left.';
+      sellerSpeech.className='speech'; sellerSpeech.innerHTML = currentQuestion.type === 'missing10'
+        ? '<strong>Hint time.</strong><br>Look at how many are left, then think about how many were sold.'
+        : '<strong>Hint time.</strong><br>Count what is left after some ice creams were sold.';
+      feedback.className='feedback'; feedback.textContent='💡 Hint shown.'; fallbackTap();
+    }
+    function clearAnswer(){ if(questionResolved) return; selectedAnswer=null; updateChosenAnswer(); renderAnswers(); syncButtons(); feedback.className='feedback'; feedback.textContent='Answer cleared.'; fallbackTap(); }
+    function nextOrder(){ if(!questionResolved){ feedback.className='feedback'; feedback.textContent='Finish this order first.'; return; } currentQuestionNumber += 1; if(currentQuestionNumber > levels[currentLevel].q){ finishLevel(); return; } loadQuestion(); }
+
+    function loadQuestion(){
+      currentQuestion = pickQuestion(); selectedAnswer=null; questionResolved=false; revealReady=false; revealCorrect=false;
+      const customerArt = randomFrom(ASSETS.images.customers);
+      tryImage(customerImg, null, customerArt, '');
+      customerLine.textContent = randomFrom(customerPool);
+      orderEquation.textContent = currentQuestion.equation;
+      countEquation.textContent = currentQuestion.equation;
+      orderHelp.textContent = currentQuestion.prompt;
+      countHelp.textContent = currentQuestion.type === 'missing10' ? 'Tap how many ice creams were sold, then press Check.' : 'Tap how many ice creams are left, then press Check.';
+      updateChosenAnswer(); renderAnswers(); renderFreezer(); hideReasoning(); setSellerReady(); syncButtons(); updateTop(); setStep(1); feedback.className='feedback'; feedback.textContent = levels[currentLevel].counted ? 'Assessment order is ready!' : 'Practice order is ready!'; startTimer();
+    }
+
+    function introText(levelNo){
+      if(levelNo===1) return 'Questions: 3<br>Skill: subtraction from 10<br>Timer: Off<br>This is practice only.';
+      if(levelNo===2) return 'Questions: 4<br>Skill: subtraction from 10<br>Timer: Off<br>This level counts in assessed score.';
+      if(levelNo===3) return 'Questions: 5<br>Skill: subtraction within 10<br>Timer: 20 seconds each<br>This level counts in assessed score.';
+      if(levelNo===4) return 'Questions: 6<br>Skill: missing number from 10<br>Timer: 20 seconds each<br>This level counts in assessed score.';
+      return 'Questions: 8<br>Skill: mixed subtraction<br>Timer: 15 seconds each<br>Bonus level only.<br>Get a streak of 7 to win the Super Sundae!';
+    }
+    function startLevel(levelNo){
+      currentLevel=levelNo; currentQuestionNumber=1; currentRoundScore=0; currentLevelStreak=0; if(levelNo === 5) level5BestStreak=0;
+      usedKeys.clear(); currentQuestion=null; questionResolved=true; selectedAnswer=null; revealReady=false; revealCorrect=false; stopTimer(); timeLeft=null;
+      renderTickets(); renderAnswers(); updateChosenAnswer(); hideReasoning(); setSellerReady(); updateTop();
+      introTitle.textContent=levels[levelNo].name; introBadge.textContent=levels[levelNo].badge; introMission.textContent=levels[levelNo].mission; introDetails.innerHTML=introText(levelNo);
+      showModal(introModal);
+    }
+
+    function setBonusPanelForLevel5(){
+      bonusBox.classList.add('show');
+      tryImage(secretSundaeImg, secretSundaeFallback, ASSETS.images.secretSundae, '🍨✨');
+      if(level5BestStreak >= 7){
+        bonusBox.className = 'bonus-box show';
+        bonusTitle.textContent = '🎉 Super Sundae Unlocked! 🎉';
+        bonusLine.textContent = 'You got a streak of 7 in Level 5. Extra sprinkles for you, superstar seller!';
+      } else {
+        bonusBox.className = 'bonus-box challenge show';
+        bonusTitle.textContent = '🍨 Super Sundae Challenge';
+        bonusLine.textContent = 'You need a streak of 7 in Level 5 to unlock the Super Sundae. Try again!';
+      }
+    }
+
+    function finishLevel(){
+      stopTimer(); playAssetSound(audioLevel, fallbackLevel); roundTitle.textContent=levels[currentLevel].name+' Complete!'; roundBadge.textContent=levels[currentLevel].badge; bonusBox.className='bonus-box';
+      if(currentLevel === 1){
+        roundReport.innerHTML='Practice score: '+currentRoundScore+'/'+levels[currentLevel].q+'<br>This level does <strong>not</strong> count in assessed score.<br>Next: Level 2 begins.';
+        roundLine.textContent='Practice is done. Now the assessed levels begin.';
+        roundActions.innerHTML='<button class="game-btn btn-check" id="modalNextBtn" type="button">➡ Go to Level 2</button>';
+      } else if(currentLevel >= 2 && currentLevel <= 4){
+        roundReport.innerHTML=levels[currentLevel].name+': '+currentRoundScore+'/'+levels[currentLevel].q+'<br>Current assessed total: '+assessedScore+'/15<br>L2: '+perLevelScore[2]+'/'+levels[2].q+'<br>L3: '+perLevelScore[3]+'/'+levels[3].q+'<br>L4: '+perLevelScore[4]+'/'+levels[4].q;
+        roundLine.textContent=currentLevel < 4 ? 'Good work. The next level will be trickier.' : 'Assessed levels are complete. Bonus round next!';
+        roundActions.innerHTML='<button class="game-btn btn-check" id="modalNextBtn" type="button">➡ Go to Level '+(currentLevel+1)+'</button><button class="game-btn btn-clear" id="modalReplayBtn" type="button">🔁 Replay Level</button>';
+      } else {
+        roundReport.innerHTML='Bonus score: '+currentRoundScore+'/'+levels[currentLevel].q+'<br>Final assessed score: '+assessedScore+'/15<br>Best Level 5 streak: '+level5BestStreak;
+        roundLine.textContent=level5BestStreak >= 7 ? 'Amazing! You unlocked the Super Sundae!' : 'Bonus round complete. Reach a streak of 7 in Level 5 to win the Super Sundae!';
+        setBonusPanelForLevel5();
+        roundActions.innerHTML='<button class="game-btn btn-check" id="modalFinishBtn" type="button">🏁 Finish Game</button><button class="game-btn btn-clear" id="modalRestartBtn" type="button">🔁 Play Again</button>';
+      }
+      showModal(roundModal); wireRoundButtons(); setBestScore(assessedScore);
+    }
+
+    function wireRoundButtons(){
+      const modalNextBtn=document.getElementById('modalNextBtn');
+      const modalReplayBtn=document.getElementById('modalReplayBtn');
+      const modalFinishBtn=document.getElementById('modalFinishBtn');
+      const modalRestartBtn=document.getElementById('modalRestartBtn');
+      if(modalNextBtn) modalNextBtn.addEventListener('click', ()=>{ hideModal(roundModal); startLevel(currentLevel+1); });
+      if(modalReplayBtn) modalReplayBtn.addEventListener('click', ()=>{ hideModal(roundModal); startLevel(currentLevel); });
+      if(modalFinishBtn) modalFinishBtn.addEventListener('click', ()=>{ hideModal(roundModal); finishGame(); });
+      if(modalRestartBtn) modalRestartBtn.addEventListener('click', ()=>{ hideModal(roundModal); resetGame(); });
+    }
+
+    function finishGame(){ stopOpeningMusic(); currentQuestion=null; questionResolved=true; stopTimer(); updateTop(); syncButtons(); setStep(3); feedback.className='feedback good'; feedback.innerHTML='🏁 Game finished! Assessed score: <strong>'+assessedScore+'/15</strong>.'; setSellerArt('good'); sellerSpeech.className='speech good'; sellerSpeech.innerHTML='<strong>Great job, Seller!</strong><br>Play again whenever you are ready.'; setBestScore(assessedScore); }
+    function resetGame(){ stopOpeningMusic(); perLevelScore={2:0,3:0,4:0}; assessedScore=0; streak=0; bestRunStreak=0; currentLevelStreak=0; level5BestStreak=0; startLevel(1); setBestScore(0); setBestStreak(getBestStreak()); }
+
+    function launchConfetti(){ confettiLayer.innerHTML=''; const colors=['#ff8fbd','#7ed4ff','#ffd166','#8de49a','#c4a8ff']; for(let i=0;i<18;i++){ const piece=document.createElement('div'); piece.className='confetti-piece'; piece.style.left=(Math.random()*100)+'vw'; piece.style.width=(6+Math.random()*8)+'px'; piece.style.height=(10+Math.random()*10)+'px'; piece.style.background=colors[i % colors.length]; piece.style.animationDuration=(1.2+Math.random()*1.2)+'s'; confettiLayer.appendChild(piece);} setTimeout(()=>{ confettiLayer.innerHTML=''; },1800); }
+    function startGame(){
+      setPlayerName(coverNameInput.value);
+      coverScreen.classList.add('hidden');
+      app.classList.add('show');
+      startLevel(1);
+      if(!gameStartedOnce){ startOpeningMusic(); gameStartedOnce = true; }
+    }
+
+    setAudioSource(audioOpening, ASSETS.audio.opening);
+    setAudioSource(audioCorrect, ASSETS.audio.correct);
+    setAudioSource(audioWrong, ASSETS.audio.wrong);
+    setAudioSource(audioLevel, ASSETS.audio.level);
+    tryImage(customerImg, null, ASSETS.images.customers[0], '');
+    setSellerArt('neutral');
+    setSmartBackground(ASSETS.images.cartBackdrop);
+    tryImage(secretSundaeImg, secretSundaeFallback, ASSETS.images.secretSundae, '🍨✨');
+
+    coverStartBtn.addEventListener('click', startGame);
+    coverNameInput.addEventListener('keydown', e=>{ if(e.key === 'Enter') startGame(); });
+    startLevelBtn.addEventListener('click', ()=>{ stopOpeningMusic(); hideModal(introModal); loadQuestion(); });
+    checkBtn.addEventListener('click', checkAnswer);
+    hintBtn.addEventListener('click', showHint);
+    clearBtn.addEventListener('click', clearAnswer);
+    nextBtn.addEventListener('click', nextOrder);
+    backBtn.addEventListener('click', ()=>{ if(currentStep > 1) setStep(currentStep - 1); });
+    forwardBtn.addEventListener('click', ()=>{ if(currentStep === 1){ setStep(2); return; } if(currentStep === 2){ if(questionResolved) setStep(3); else feedback.textContent='Choose an answer and press Check first.'; return; } if(questionResolved) nextOrder(); else setStep(1); });
+    infoBtn.addEventListener('click', ()=>showModal(infoModal));
+    closeInfoBtn.addEventListener('click', ()=>hideModal(infoModal));
+    changeUserBtn.addEventListener('click', ()=>{ playerNameInput.value=getPlayerName(); showModal(nameModal); });
+    saveNameBtn.addEventListener('click', ()=>{ setPlayerName(playerNameInput.value); hideModal(nameModal); feedback.textContent='Player changed to ' + getPlayerName() + '.'; });
+    soundToggleBtn.addEventListener('click', ()=>{
+      soundOn=!soundOn;
+      soundToggleBtn.textContent=soundOn ? '🔊 Sound' : '🔇 Sound';
+      if(soundOn) fallbackTap();
+      else stopOpeningMusic();
+    });
+
+    setPlayerName(getPlayerName());
+    bestScoreText.textContent=String(getBestScore());
+    bestStreakText.textContent=String(getBestStreak());
+    renderAnswers(); renderTickets(); updateChosenAnswer(); hideReasoning(); setSellerReady(); updateTop(); syncButtons(); setStep(1);
+  </script>
+</body>
+</html>
