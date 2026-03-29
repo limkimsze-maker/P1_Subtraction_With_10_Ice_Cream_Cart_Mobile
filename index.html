@@ -66,11 +66,10 @@
     .top-row{display:flex;justify-content:space-between;align-items:center;gap:8px;}
     .title{font-size:clamp(1.04rem,4vw,1.25rem);font-weight:900;color:#ad4476;line-height:1;}
     .subtitle{font-size:10px;font-weight:900;opacity:.88;margin-top:2px;}
-    .top-actions{display:flex;gap:6px;flex-wrap:wrap;}
+    .top-actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:flex-end;}
     .pill-btn{border:2px solid var(--brown);border-radius:999px;background:#fff3df;color:#6a3151;font-size:15px;font-weight:900;padding:4px 8px;cursor:pointer;}
-    .status-grid{margin-top:5px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;}
-    .status-box{background:#fff3df;border:2px solid var(--brown);border-radius:10px;text-align:center;padding:4px 2px;font-size:8px;font-weight:900;line-height:1.05;}
-    .status-box span{display:block;font-size:11px;margin-top:1px;}
+    .time-pill{display:flex;align-items:center;gap:6px;border:2px solid var(--brown);border-radius:999px;background:#fff3df;color:#6a3151;font-size:15px;font-weight:900;padding:4px 10px;white-space:nowrap;}
+    .metrics-cache{display:none;}
     .tickets-wrap,.progress-wrap{padding:5px 8px;}
     .section-label{text-align:center;font-size:10px;font-weight:900;margin-bottom:3px;}
     .tickets{display:flex;justify-content:center;gap:4px;flex-wrap:wrap;min-height:24px;}
@@ -178,7 +177,7 @@
       .topbar,.tickets-wrap,.progress-wrap,.frame,.feedback,.modal-card{border-width:2px;border-radius:14px;}
       .title{font-size:.92rem;}.subtitle{font-size:8px;}
       .pill-btn{font-size:12px;padding:4px 7px;}
-      .status-box{font-size:7px;padding:3px 1px;}.status-box span{font-size:9px;}
+      .time-pill{font-size:12px;padding:4px 8px;}
       .section-label{font-size:9px;}.ticket{width:18px;height:18px;font-size:9px;}
       .story-pill{font-size:13px;padding:5px 3px;}
       .frame{padding:5px;}.frame-title{font-size:11px;}.main-card{padding:6px 5px;border-width:2px;}
@@ -200,7 +199,7 @@
       .app{gap:3px;padding:max(2px, env(safe-area-inset-top)) 5px max(2px, env(safe-area-inset-bottom));}
       .title{font-size:.85rem;}.subtitle{font-size:7px;}
       .pill-btn{font-size:10px;padding:4px 6px;}
-      .status-box{font-size:7px;padding:2px 1px;}.status-box span{font-size:8px;}
+      .time-pill{font-size:10px;padding:4px 7px;}
       .ticket{width:16px;height:16px;font-size:8px;}
       .story-pill{font-size:11px;padding:4px 2px;}
       .frame{padding:4px;}.main-card{padding:5px 4px;}
@@ -249,18 +248,19 @@
           <div class="subtitle">Order → Count → Seller</div>
         </div>
         <div class="top-actions">
+          <div class="time-pill">⏱ <span id="timerText">Off</span></div>
           <button class="pill-btn" id="soundToggleBtn" type="button">🔊 Sound</button>
           <button class="pill-btn" id="changeUserBtn" type="button">👤 Change</button>
           <button class="pill-btn" id="infoBtn" type="button">📘 Info</button>
         </div>
       </div>
-      <div class="status-grid">
-        <div class="status-box">Player<span id="playerNameText">Seller</span></div>
-        <div class="status-box">Level<span id="levelText">1</span></div>
-        <div class="status-box">Question<span><span id="qNumText">1</span>/<span id="qTotalText">3</span></span></div>
-        <div class="status-box">Round Score<span id="roundScoreText">0</span></div>
-        <div class="status-box">Assessed<span id="assessedScoreText">0/15</span></div>
-        <div class="status-box">Time<span id="timerText">Off</span></div>
+      <div class="metrics-cache" aria-hidden="true">
+        <span id="playerNameText">Seller</span>
+        <span id="levelText">1</span>
+        <span id="qNumText">1</span>
+        <span id="qTotalText">3</span>
+        <span id="roundScoreText">0</span>
+        <span id="assessedScoreText">0/15</span>
       </div>
     </header>
 
